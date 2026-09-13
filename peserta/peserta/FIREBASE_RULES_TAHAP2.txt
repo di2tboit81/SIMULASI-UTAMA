@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+  function signedIn(){return request.auth != null;}
+  function isAdmin(){return signedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)) && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == "admin";}
+  match /admins/{uid}{allow read:if signedIn()&&request.auth.uid==uid;allow write:if false;}
+  match /usernames/{username}{allow get:if true;allow list:if isAdmin();allow create:if signedIn()&&request.resource.data.uid==request.auth.uid&&request.resource.data.username==username;allow update,delete:if isAdmin()||(signedIn()&&resource.data.uid==request.auth.uid);}
+  match /users/{uid}{allow create:if isAdmin() || (signedIn()&&request.auth.uid==uid&&request.resource.data.uid==uid&&request.resource.data.status=="pending");allow read:if isAdmin()||(signedIn()&&request.auth.uid==uid);allow update,delete:if isAdmin();
+   match /examSessions/{mode}{allow read,write:if signedIn()&&request.auth.uid==uid&&mode in ['practice','simulation','cat','real'];}
+   match /loginSession/{session}{allow read,write:if signedIn()&&request.auth.uid==uid&&session=='active';}
+  }
+  match /appSettings/{documentId}{allow get:if signedIn();allow list:if false;allow write:if isAdmin();}
+  match /publicSettings/{documentId}{allow get:if documentId=="whatsapp";allow list:if false;allow write:if isAdmin();}
+  match /adminHistory/{id}{allow read,write:if isAdmin();}
+ }
+}

@@ -1,0 +1,1015 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SIMULASI INDONESIA</title>
+<style>
+:root {
+    --gold: #ffd85a;
+    --red: #ff2035;
+    --green: #19ee77;
+    --blue: #168dff;
+    --purple: #bd3cff;
+    --cyan: #17dcff;
+    --orange: #ff9900;
+}
+* {
+    box-sizing: border-box;
+}
+html,body {
+    margin: 0;
+    min-height: 100%;
+    font-family: Arial,Helvetica,sans-serif;
+    color: #fff;
+}
+body {
+    background: #060a12;
+}
+.portal {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.3)),
+url("assets/background-utama.jpg") center top/cover no-repeat;
+}
+.portal:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg,transparent 35%,rgba(0,0,0,.25) 100%);
+}
+.top {
+    position: relative;
+    z-index: 4;
+    max-width: 1450px;
+    margin: auto;
+    padding: 12px 26px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+}
+.brand {
+    display: none;
+}
+.brand-icon {
+    display: none;
+}
+.brand b {
+    display: none;
+}
+.nav {
+    display: flex;
+    padding: 4px;
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 30px;
+    background: rgba(5,10,20,.7);
+    backdrop-filter: blur(9px);
+    box-shadow: 0 8px 25px #0008;
+}
+.nav a {
+    padding: 10px 18px;
+    border-radius: 25px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 13px;
+}
+.nav a:hover,.nav .active {
+    background: linear-gradient(#fff2a1,#dba119);
+    color: #15120b;
+    box-shadow: 0 0 18px #ffd85a;
+}
+.motto {
+    font-size: 12px;
+    font-weight: 900;
+    display: flex;
+    gap: 8px;
+}
+.flag {
+    width: 13px;
+    height: 24px;
+    background: linear-gradient(#e51c2b 50%,#fff 50%);
+}
+.portal-logo {
+    position: relative;
+    z-index: 5;
+    width: min(1000px, 100vw);
+    height: 255px;
+    margin: 0 auto 2px;
+	transform: translateY(-25px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 0 8px rgba(255,216,90,.9)) drop-shadow(0 0 22px rgba(255,180,0,.45));
+}
+.portal-logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+.hero {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    padding: 0 12px 8px;
+}
+.garuda {
+    font-size: 95px;
+    line-height: .8;
+    filter: drop-shadow(0 0 18px #ffd85a);
+    margin-top: 0;
+}
+.kop {
+    font-size: 15px;
+    letter-spacing: 7px;
+    font-weight: 900;
+    text-shadow: 0 3px 9px #000;
+}
+h1 {
+    margin: 2px 0;
+    font-size: clamp(40px,5vw,76px);
+    line-height: .95;
+    font-weight: 1000;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 0 5px 0 #8b5d13,0 7px 22px #000,0 0 22px #ffd85a55;
+}
+h1 span {
+    color: #ffd64e;
+}
+.tag {
+    font-weight: 900;
+    letter-spacing: 7px;
+    font-size: 14px;
+    text-shadow: 0 3px 8px #000;
+}
+.cards {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    max-width: 1000px;
+    margin: -30px auto 20px;
+    padding: 0 10px;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 20px;
+}
+.card {
+    --accent: var(--red);
+    --bg: url("assets/backgrounds/skd.jpg");
+    position: relative;
+    min-height: 235px;
+    border-radius: 19px;
+    overflow: hidden;
+    isolation: isolate;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 8px var(--accent),0 0 25px color-mix(in srgb,var(--accent),transparent 35%),0 15px 30px #000a;
+    transition: .2s;
+}
+.card:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background: var(--bg) center/cover no-repeat;
+    filter: brightness(.65) saturate(1.25);
+}
+.card:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg,color-mix(in srgb,var(--accent),transparent 58%),rgba(0,0,0,.82));
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 13px var(--accent),0 0 45px color-mix(in srgb,var(--accent),transparent 25%),0 18px 35px #000b;
+}
+.inside {
+    height: 100%;
+    min-height: 235px;
+    padding: 13px 18px 14px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #fff;
+    box-shadow: 0 0 7px #fff,0 0 22px var(--accent),0 0 42px color-mix(in srgb,var(--accent),transparent 35%);
+    background: #0008;
+}
+.icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.card h2 {
+    margin: 7px 0 4px;
+    font-size: 20px;
+    text-shadow: 0 3px 8px #000;
+    font-weight: 1000;
+}
+.card p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.3;
+    font-weight: 700;
+    text-shadow: 0 2px 6px #000;
+    max-width: 295px;
+}
+.start {
+    margin-top: auto;
+    width: 92%;
+    padding: 10px 12px;
+    border-radius: 999px;
+    border: 2px solid #fff;
+    color: #fff;
+    font-weight: 1000;
+    font-size: 12px;
+    background: linear-gradient(#ffffff22,#0003),var(--accent);
+    box-shadow: 0 0 7px #fff,0 0 18px var(--accent);
+    cursor: pointer;
+}
+.start:hover {
+    filter: brightness(1.16);
+}
+.skd {
+    --accent: var(--red);
+    --bg: url("assets/backgrounds/skd.jpg");
+}
+.tni {
+    --accent: var(--green);
+    --bg: url("assets/backgrounds/tni.jpg");
+}
+.polri {
+    --accent: var(--blue);
+    --bg: url("assets/backgrounds/polri.jpg");
+}
+.univ {
+    --accent: var(--purple);
+    --bg: url("assets/backgrounds/universitas.jpg");
+}
+.toefl {
+    --accent: var(--cyan);
+    --bg: url("assets/backgrounds/toefl.jpg");
+}
+.psi {
+    --accent: var(--orange);
+    --bg: url("assets/backgrounds/psikotes.jpg");
+}
+.features {
+    position: relative;
+    z-index: 5;
+    max-width: 1130px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    padding: 11px 15px;
+    border-radius: 17px;
+    background: #09101dcc;
+    border: 1px solid #ffd85a99;
+    box-shadow: 0 0 25px #000a,0 0 20px #ffd85a22;
+    backdrop-filter: blur(8px);
+}
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 14px;
+    border-right: 1px solid #ffffff35;
+}
+.feature:last-child {
+    border: 0;
+}
+.fi {
+    font-size: 28px;
+}
+.feature b {
+    font-size: 12px;
+    display: block;
+}
+.feature small {
+    font-size: 10px;
+    color: #ddd;
+}
+
+.footer {
+    position: relative;
+    z-index: 5;
+    max-width: 1450px;
+    margin: 10px auto 0;
+    padding: 10px 20px;
+
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 18px;
+
+    border: 1px solid rgba(255,216,90,.55);
+    border-top: 2px solid #ffd85a;
+    border-radius: 20px;
+
+    background: rgba(3,6,12,.48);
+    backdrop-filter: blur(4px);
+
+    box-shadow:
+        0 0 10px rgba(255,216,90,.35),
+        0 0 25px rgba(255,180,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.12);
+
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.footer-left,
+.footer-center,
+.footer-right {
+    position: relative;
+    min-width: 0;
+}
+
+.footer-left {
+    text-align: left;
+    padding-left: 34px;
+}
+
+.footer-left::before,
+.footer-right::after {
+    content: "🇮🇩";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 23px;
+
+    filter:
+        drop-shadow(0 0 2px #fff)
+        drop-shadow(0 0 5px rgba(255,216,90,.45));
+}
+
+.footer-left::before {
+    left: 0;
+}
+
+.footer-right {
+    text-align: right;
+    padding-right: 34px;
+}
+
+.footer-right::after {
+    right: 0;
+}
+
+.footer-title {
+    display: block;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 1000;
+    letter-spacing: 1px;
+
+    text-shadow:
+        0 0 4px #fff,
+        0 0 10px #ffd85a,
+        0 0 18px rgba(255,180,0,.7),
+        0 2px 5px #000;
+}
+
+.footer-sub {
+    display: block;
+    margin-top: 6px;
+    color: #fff4b0;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+
+    text-shadow:
+        0 0 4px #ffd85a,
+        0 0 9px rgba(255,180,0,.65),
+        0 2px 4px #000;
+}
+
+.footer-center {
+    text-align: center;
+    padding: 0 18px;
+}
+
+.footer-center .map {
+    display: block;
+    font-size: 42px;
+    line-height: 1;
+
+    filter:
+        drop-shadow(0 0 4px #fff)
+        drop-shadow(0 0 10px #ffd85a)
+        drop-shadow(0 0 18px rgba(255,174,0,.65));
+}
+
+.footer-center .center-line {
+    display: block;
+    width: 115px;
+    height: 2px;
+    margin: 7px auto 0;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        #ffd85a,
+        transparent
+    );
+
+    box-shadow: 0 0 8px #ffd85a;
+}
+
+.footer-center .footer-power-center {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 4px 15px;
+
+    border: 2px solid rgba(255,216,90,.65);
+    border-radius: 999px;
+
+    color: #ffe98a;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1px;
+
+    text-shadow:
+        0 0 4px #ffd85a,
+        0 0 8px rgba(255,180,0,.45);
+
+    box-shadow:
+        0 0 6px rgba(255,216,90,.4),
+        inset 0 0 7px rgba(255,180,0,.08);
+}
+
+.footer-right .footer-title strong {
+    color: #ffd85a;
+    font-size: 18px;
+    font-weight: 1000;
+
+    text-shadow:
+        0 0 5px #fff,
+        0 0 12px #ffd85a,
+        0 0 20px rgba(255,180,0,.75);
+}
+
+.footer-right .footer-sub {
+    color: #ffe98a;
+}
+
+@media(max-width:600px) {
+    .footer {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 12px;
+        padding: 15px 14px;
+        border-radius: 22px;
+    }
+
+    .footer-left,
+    .footer-center,
+    .footer-right {
+        text-align: center;
+        padding: 0;
+    }
+
+    .footer-left::before,
+    .footer-right::after {
+        display: none;
+    }
+
+    .footer-title {
+        font-size: 12px;
+    }
+
+    .footer-sub {
+        font-size: 9px;
+    }
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: #000b;
+    backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.modal.show {
+    display: flex;
+}
+.box {
+    width: min(470px,100%);
+    padding: 25px;
+    border-radius: 22px;
+    text-align: center;
+    background: linear-gradient(145deg,#222b3a,#070c14);
+    border: 1px solid #ffd85a;
+    box-shadow: 0 25px 80px #000,0 0 30px #ffd85a33;
+}
+.box h3 {
+    color: #ffe27a;
+    margin: 0 0 8px;
+    font-size: 25px;
+}
+.box p {
+    color: #ddd;
+}
+.actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+.actions button {
+    border: 0;
+    border-radius: 12px;
+    padding: 12px 17px;
+    font-weight: 1000;
+    cursor: pointer;
+}
+.cancel {
+    background: #384151;
+    color: #fff;
+}
+.go {
+    background: linear-gradient(#ffe97d,#ffae00);
+}
+
+@media(max-width:950px){
+.portal-logo {
+    width: min(760px, 92vw);
+    height: 205px;
+}
+.portal-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+.top {
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.motto {
+    display: none;
+}
+.cards {
+    grid-template-columns: repeat(2,1fr);
+    max-width: 760px;
+}
+.features {
+    grid-template-columns: repeat(2,1fr);
+    margin: 0 15px;
+}
+.feature:nth-child(2) {
+    border-right: 0;
+}
+}
+
+@media(max-width:600px){
+.portal-logo {
+    width: 94vw;
+    height: 145px;
+}
+.portal-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+.top {
+    padding: 9px;
+}
+.brand b {
+    font-size: 15px;
+}
+.brand-icon {
+    font-size: 31px;
+}
+.nav a {
+    padding: 8px 9px;
+    font-size: 10px;
+}
+.garuda {
+    font-size: 60px;
+}
+.kop {
+    font-size: 9px;
+    letter-spacing: 4px;
+}
+h1 {
+    font-size: 38px;
+}
+.tag {
+    font-size: 9px;
+    letter-spacing: 3px;
+}
+.cards {
+    grid-template-columns: 1fr;
+    padding: 0 12px;
+}
+.card,.inside {
+    min-height: 215px;
+}
+.features {
+    grid-template-columns: 1fr;
+}
+.feature {
+    border-right: 0;
+    border-bottom: 1px solid #ffffff24;
+    padding: 8px;
+}
+.feature:last-child {
+    border-bottom: 0;
+}
+.footer {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+}
+.actions {
+    flex-direction: column;
+}
+}
+
+/* ===== DEFAULT DESKTOP 80% ===== */
+@media (min-width: 951px) {
+    body {
+        zoom: 1;
+    }
+}
+
+/* Browser/device fallback where zoom is not honored */
+@supports not (zoom: 0.8) {
+    @media (min-width: 951px) {
+        .portal {
+            transform: scale(0.8);
+            transform-origin: top left;
+            width: 125%;
+        }
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="portal">
+
+<header class="top">
+  <div class="motto">
+   
+  </div>
+</header>
+
+<div class="portal-logo">
+
+    <img
+        src="assets/garuda-simulasi-indonesia.png"
+        alt="Garuda SIMULASI INDONESIA"
+    >
+
+</div>
+
+<main class="cards">
+
+<article class="card skd">
+
+  <div class="inside">
+
+    <div class="icon">
+      <img src="assets/icons/skd.png" alt="SKD">
+    </div>
+
+    <h2>SIMULASI SKD</h2>
+
+    <p>
+        Latihan Seleksi Kompetensi Dasar dengan tampilan interaktif.
+    </p>
+
+    <button
+      class="start"
+      data-title="SIMULASI SKD"
+      data-desc="Anda akan menuju halaman simulasi SKD."
+      data-url="peserta/peserta/index.html">
+
+      MULAI SIMULASI →
+
+    </button>
+
+  </div>
+
+</article>
+
+<article class="card tni">
+
+    <div class="inside">
+
+        <div class="icon">
+            <img src="assets/icons/tni.png" alt="TNI">
+        </div>
+
+        <h2>SIMULASI TNI</h2>
+
+        <p>
+            Persiapkan diri dengan latihan simulasi seleksi TNI.
+        </p>
+
+        <button
+            class="start"
+            data-title="SIMULASI TNI"
+            data-desc="Anda akan menuju halaman simulasi TNI."
+            data-url="simulasi-tni/index.html"
+        >
+
+            MULAI SIMULASI →
+
+        </button>
+
+    </div>
+
+</article>
+
+<article class="card polri">
+
+    <div class="inside">
+
+        <div class="icon">
+            <img src="assets/icons/polri.png" alt="POLRI">
+        </div>
+
+        <h2>SIMULASI POLRI</h2>
+
+        <p>
+            Latihan untuk menghadapi tahapan seleksi POLRI.
+        </p>
+
+        <button
+            class="start"
+            data-title="SIMULASI POLRI"
+            data-desc="Anda akan menuju halaman simulasi POLRI."
+            data-url="simulasi-polri/index.html"
+        >
+
+            MULAI SIMULASI →
+
+        </button>
+
+    </div>
+
+</article>
+
+<article class="card univ">
+
+    <div class="inside">
+
+        <div class="icon">
+            <img src="assets/icons/universitas.png" alt="Universitas">
+        </div>
+
+        <h2>SIMULASI UNIVERSITAS</h2>
+
+        <p>
+            Latihan persiapan seleksi masuk perguruan tinggi.
+        </p>
+
+        <button
+            class="start"
+            data-title="SIMULASI UNIVERSITAS"
+            data-desc="Anda akan menuju halaman simulasi Universitas."
+            data-url="simulasi-universitas/index.html"
+        >
+
+            MULAI SIMULASI →
+
+        </button>
+
+    </div>
+
+</article>
+
+<article class="card toefl">
+
+    <div class="inside">
+
+        <div class="icon">
+            <img src="assets/icons/toefl.png" alt="TOEFL">
+        </div>
+
+        <h2>SIMULASI TOEFL</h2>
+
+        <p>
+            Latihan kemampuan bahasa Inggris dengan format simulasi.
+        </p>
+
+        <button
+            class="start"
+            data-title="SIMULASI TOEFL"
+            data-desc="Anda akan menuju halaman simulasi TOEFL."
+            data-url="simulasi-toefl/index.html"
+        >
+
+            MULAI SIMULASI →
+
+        </button>
+
+    </div>
+
+</article>
+
+<article class="card psi">
+
+    <div class="inside">
+
+        <div class="icon">
+            <img src="assets/icons/psikotes.png" alt="Psikotes">
+        </div>
+
+        <h2>SIMULASI PSIKOTES</h2>
+
+        <p>
+            Latihan berbagai tipe soal psikotes secara interaktif.
+        </p>
+
+        <button
+            class="start"
+            data-title="SIMULASI PSIKOTES"
+            data-desc="Anda akan menuju halaman simulasi Psikotes."
+            data-url="simulasi-psikotes/index.html"
+        >
+
+            MULAI SIMULASI →
+
+        </button>
+
+    </div>
+
+</article>
+
+</main>
+
+<section class="features" id="tentang">
+
+  <div class="feature">
+    <span class="fi">🎯</span>
+    <span>
+        <b>Latihan Soal Terupdate</b>
+        <small>Sesuai kisi-kisi terbaru</small>
+    </span>
+  </div>
+
+  <div class="feature" id="panduan">
+    <span class="fi">▥</span>
+    <span>
+        <b>Tampilan Interaktif</b>
+        <small>Nyaman di semua perangkat</small>
+    </span>
+  </div>
+
+  <div class="feature">
+    <span class="fi">▣</span>
+    <span>
+        <b>Akses Mudah</b>
+        <small>Desktop, Tablet, dan Smartphone</small>
+    </span>
+  </div>
+
+  <div class="feature" id="kontak">
+    <span class="fi">🛡</span>
+    <span>
+        <b>100% Gratis / Pribadi</b>
+        <small>Belajar lebih siap dan percaya diri</small>
+    </span>
+  </div>
+
+</section>
+
+<footer class="footer">
+
+    <div class="footer-left">
+
+        <span class="footer-title">
+            © 2026 SIMULASI INDONESIA
+        </span>
+
+        <span class="footer-sub">
+            ALL RIGHTS RESERVED
+        </span>
+
+    </div>
+
+    <div class="footer-center">
+
+        <span class="map">
+            
+        </span>
+
+        <span class="center-line"></span>
+
+        <span class="footer-power-center">
+            POWER BY WAK DIT B@-IT
+        </span>
+
+    </div>
+
+    <div class="footer-right">
+
+        <span class="footer-title">
+            🇮🇩 INDONESIA <strong>MAJU</strong>
+        </span>
+
+        <span class="footer-sub">
+            GENERASI UNGGUL • MASA DEPAN GEMILANG
+        </span>
+
+    </div>
+
+</footer>
+
+</div>
+
+<div class="modal" id="modal">
+
+    <div class="box">
+
+        <h3 id="mt"></h3>
+
+        <p id="md"></p>
+
+        <div class="actions">
+
+            <button class="cancel" id="cancel">
+                BATAL
+            </button>
+
+            <button class="go" id="go">
+                LANJUT KE SIMULASI →
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let url = "";
+
+const modal = document.getElementById("modal");
+
+document.querySelectorAll(".start").forEach((button) => {
+
+    button.onclick = () => {
+
+        url = button.dataset.url;
+
+        mt.textContent = button.dataset.title;
+
+        md.textContent = button.dataset.desc;
+
+        modal.classList.add("show");
+
+    };
+
+});
+
+cancel.onclick = () => {
+
+    modal.classList.remove("show");
+
+};
+
+go.onclick = () => {
+
+    if (url) {
+
+        location.href = url;
+
+    }
+
+};
+
+modal.onclick = (event) => {
+
+    if (event.target === modal) {
+
+        modal.classList.remove("show");
+
+    }
+
+};
+
+</script>
+
+</body>
+</html>

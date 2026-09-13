@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Simulasi SKD IPDN CPNS 2026 — CAT</title>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<!-- Kontrol layar pembuka TIDAK bergantung pada Firebase.
+     Jadi tombol OK tetap bekerja walaupun Firebase belum dikonfigurasi. -->
+<script>
+(function(){
+  function initWelcome(){
+    const welcome=document.getElementById("welcomeScreen");
+    const ok=document.getElementById("welcomeOk");
+    const cancel=document.getElementById("welcomeCancel");
+    const auth=document.getElementById("authScreen");
+    const register=document.getElementById("registerForm");
+    const login=document.getElementById("loginParticipantForm");
+    const title=document.getElementById("authTitle");
+    const subtitle=document.getElementById("authSubtitle");
+    if(!welcome || !ok) return;
+
+    function showLogin(){
+      if(register) register.classList.add("hidden");
+      if(login) login.classList.remove("hidden");
+      if(title) title.textContent="LOGIN PESERTA";
+      if(subtitle) subtitle.textContent="Gunakan akun yang sudah didaftarkan.";
+      const sw=document.getElementById("switchAuth");
+      if(sw) sw.textContent="Belum punya akun? DAFTAR";
+    }
+    function showRegister(){
+      if(login) login.classList.add("hidden");
+      if(register) register.classList.remove("hidden");
+      if(title) title.textContent="DAFTAR PESERTA";
+      if(subtitle) subtitle.textContent="Daftar terlebih dahulu untuk menggunakan aplikasi.";
+      const sw=document.getElementById("switchAuth");
+      if(sw) sw.textContent="Sudah punya akun? LOGIN";
+    }
+    const switchAuth=document.getElementById("switchAuth");
+    if(switchAuth){
+      switchAuth.addEventListener("click",function(){
+        if(login && !login.classList.contains("hidden")) showRegister();
+        else showLogin();
+      });
+    }
+
+    function enterAuth(){
+      // Setelah OK, layar informasi hanya ditutup; berpindah LOGIN/DAFTAR
+      // tidak pernah membuka kembali layar informasi.
+      sessionStorage.setItem("skdPesertaInfoPassed","1");
+      welcome.classList.add("hidden");
+      welcome.setAttribute("aria-hidden","true");
+      welcome.style.display="none";
+      if(auth){ auth.classList.remove("hidden"); auth.style.setProperty("display","flex","important"); }
+    }
+
+    ok.addEventListener("click", function(){
+      enterAuth();
+      showLogin();
+      const username=document.getElementById("participantUsername");
+      if(username) setTimeout(function(){ username.focus(); },80);
+    });
+
+    // Jika peserta sudah melewati informasi pada sesi browser ini, jangan
+    // tampilkan kembali layar informasi ketika LOGIN/DAFTAR berganti.
+    if(sessionStorage.getItem("skdPesertaInfoPassed")==="1"){
+      enterAuth();
+      showLogin();
+    }
+
+    if(cancel){
+      cancel.addEventListener("click", function(){
+        // BATAL tetap di layar informasi; tidak menutup browser.
+        cancel.blur();
+      });
+    }
+  }
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded",initWelcome);
+  else initWelcome();
+})();
+</script>
+
+<script type="module" src="firebase-auth.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<input id="localExcelInput" type="file" accept=".xlsx,.xls" style="display:none" aria-hidden="true">
+
+<!-- LAYAR INFORMASI PEMBUKA PESERTA -->
+<div id="welcomeScreen" class="welcome-screen" aria-hidden="false">
+  <div class="welcome-card" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+    <div class="welcome-ribbon"></div>
+    <div class="welcome-emblem">🏛️</div>
+    <div class="welcome-kicker">SIMULATOR RESMI TAMPILAN APLIKASI</div>
+    <h1 id="welcomeTitle">SIMULASI SKD IPDN<br><span>CPNS 2026 • CAT</span></h1>
+    <div class="welcome-line"></div>
+    <div class="welcome-info">
+      <div class="welcome-badge gold">★ LATIHAN TERSTRUKTUR</div>
+      <div class="welcome-badge silver">◈ SISTEM PESERTA</div>
+      <div class="welcome-badge red">◆ HASIL TERCATAT</div>
+    </div>
+    <p class="welcome-text">
+      Selamat datang di aplikasi <b>SIMULASI SKD IPDN CPNS 2026</b>.
+      Peserta wajib masuk menggunakan akun masing-masing. Nama peserta akan
+      diambil otomatis dari akun yang telah didaftarkan sehingga tidak perlu
+      mengisi nama peserta berulang kali.
+    </p>
+    <div class="welcome-notice">
+      <strong>INFORMASI PENTING</strong>
+      <span>Gunakan akun pribadi Anda dan pastikan koneksi internet aktif saat proses login dan sinkronisasi data.</span>
+    </div>
+    <div class="welcome-actions">
+      <button id="welcomeCancel" class="welcome-btn cancel" type="button">BATAL</button>
+      <button id="welcomeOk" class="welcome-btn ok" type="button">OK • LANJUT LOGIN</button>
+    </div>
+    <div class="welcome-footer">POWER BY WAK DIT B@-it • 2026</div>
+  </div>
+</div>
+
+<div id="authScreen" class="auth-screen hidden" style="display:none!important;">
+  <div class="auth-box">
+    <div class="auth-icon">🔐</div>
+    <h1 id="authTitle">DAFTAR PESERTA</h1>
+    <p id="authSubtitle">Daftar terlebih dahulu untuk menggunakan aplikasi.</p>
+    <form id="registerForm" class="auth-form">
+      <label>Nama Lengkap</label>
+      <input id="registerName" type="text" autocomplete="name" placeholder="Masukkan nama lengkap" required>
+      <label>Username</label>
+      <input id="registerUsername" type="text" autocomplete="username" placeholder="Buat username peserta" minlength="3" maxlength="30" required>
+      <label>Email Pemulihan</label>
+      <input id="registerEmail" type="email" autocomplete="email" placeholder="Email aktif untuk lupa password" required>
+      <label>Password</label>
+      <input id="registerPassword" type="password" autocomplete="new-password" placeholder="Minimal 6 karakter" required minlength="6">
+      <label>Ulangi Password</label>
+      <input id="registerPassword2" type="password" autocomplete="new-password" placeholder="Ulangi password" required minlength="6">
+      <div id="registerError" class="auth-error"></div>
+      <button class="auth-submit" type="submit">DAFTAR</button>
+    </form>
+    <form id="loginParticipantForm" class="auth-form hidden">
+      <label>Username</label>
+      <input id="participantUsername" type="text" autocomplete="username" placeholder="Masukkan username" minlength="3" maxlength="30" required>
+      <label>Password</label>
+      <input id="participantPassword" type="password" autocomplete="current-password" placeholder="Password" required>
+      <div id="loginParticipantError" class="auth-error"></div>
+      <button class="auth-submit" type="submit">LOGIN</button>
+      <button id="forgotPasswordBtn" type="button" class="auth-forgot">🔑 LUPA PASSWORD</button>
+      <div id="forgotPasswordBox" class="forgot-box hidden">
+        <div class="forgot-title">🔐 PEMULIHAN PASSWORD</div>
+        <p>Masukkan username dan email pemulihan yang terdaftar. Firebase akan mengirimkan link untuk membuat password baru.</p>
+        <input id="forgotUsername" type="text" autocomplete="username" placeholder="Username peserta">
+        <input id="forgotEmail" type="email" autocomplete="email" placeholder="Email pemulihan">
+        <div id="forgotPasswordError" class="auth-error"></div>
+        <button id="sendForgotPassword" type="button" class="auth-submit">📧 KIRIM LINK RESET</button>
+      </div>
+    </form>
+    <button id="switchAuth" type="button" class="auth-switch">Belum punya akun? DAFTAR</button>
+    <button id="backToPortal" type="button" class="back-portal-btn">🇮🇩 KEMBALI KE PORTAL UTAMA</button>
+  </div>
+</div>
+
+<div class="app" id="mainApp" style="display:none!important;">
+  
+  <div class="topbar">
+  <img
+    src="header-ipdn-2026.png"
+    class="header-image"
+    alt="SIMULASI SKD IPDN 2026"
+  >
+</div>
+  
+  <section id="home" class="main">
+    <div class="card login">
+      <div class="home-title-row">
+        <h2>Persiapan Peserta</h2>
+        <div id="activePeriodCard" class="active-period-card">
+          <div class="active-period-icon">⏱️</div>
+          <div class="active-period-content">
+            <span>MASA AKTIF AKUN</span>
+            <strong id="activePeriodRemaining">Memuat...</strong>
+            <small id="activePeriodUntil">-</small>
+          </div>
+        </div>
+      </div>
+      <div class="participant-auto-card">
+        <span class="participant-auto-label">NAMA PESERTA</span>
+        <strong id="participantName">Memuat...</strong>
+        <button id="participantLogout" type="button" class="participant-logout">🚪 LOGOUT</button>
+      </div>
+      <button id="resumeExam" type="button" class="btn blue hidden" style="width:100%;margin:0 0 18px;font-weight:900">▶️ LANJUTKAN SOAL YANG TERSIMPAN</button>
+      <div class="modes">
+        <div class="card mode green">
+          <h3>🟢 LATIHAN</h3>
+          <p><b>LEVEL 1</b><br>20 soal acak tanpa batas waktu. Setelah selesai, lihat pembahasan dan jawaban.</p>
+          <div class="mode-lock" data-lock-for="practice">🔓 TERSEDIA</div>
+          <button class="btn green start" data-mode="practice">MULAI LATIHAN</button>
+        </div>
+        <div class="card mode blue">
+          <h3>🔵 SIMULASI</h3>
+          <p><b>LEVEL 2</b><br>110 soal: 30 TWK, 35 TIU, 45 TKP dengan waktu 100 menit.</p>
+          <div class="mode-lock" data-lock-for="simulation">🔒 SELESAIKAN LATIHAN 100%</div>
+          <button class="btn blue start" data-mode="simulation">MULAI SIMULASI</button>
+        </div>
+        <div class="card mode gold">
+          <h3>🟡 SIMULASI CAT</h3>
+          <p><b>LEVEL 3</b><br>110 soal: 30 TWK, 35 TIU, 45 TKP dengan waktu 100 menit.</p>
+          <div class="mode-lock" data-lock-for="cat">🔒 SELESAIKAN SIMULASI 100%</div>
+          <button class="btn gold start" data-mode="cat">MULAI SIMULASI CAT</button>
+        </div>
+        <div class="card mode purple">
+          <h3>🟣 SIMULASI UJIAN CAT</h3>
+          <p><b>LEVEL 4</b><br>110 soal: 30 TWK, 35 TIU, 45 TKP dengan waktu 100 menit.</p>
+          <div class="mode-lock" data-lock-for="real">🔒 SELESAIKAN SIMULASI CAT 100%</div>
+          <button class="btn purple start" data-mode="real">MULAI SIMULASI UJIAN NYATA</button>
+        </div>
+      </div>
+      <div class="note">
+        <b>Catatan:</b> Aplikasi ini adalah simulator latihan mandiri, bukan sistem resmi BKN/IPDN.
+        Database soal dibaca dari file B@-it dan sistem mengacak paket; soal yang sudah keluar tidak dipakai lagi sampai antrean soal habis. Komposisi 110 soal dan 100 menit mengikuti pola SKD CAT yang digunakan BKN pada seleksi sekolah kedinasan. 
+      </div>
+    </div>
+  </section>
+
+  <section id="exam" class="hidden">
+    <div class="exam-head">
+      <div class="exam-head-in">
+        <div class="exam-info-left">
+
+  <div class="exam-mode">
+    <span class="exam-mode-icon">▣</span>
+    <div id="examTitle" class="exam-title">SIMULASI CAT</div>
+  </div>
+
+  <div class="exam-participant">
+    <span class="participant-icon">●</span>
+    <div>
+      <div class="participant-label">Nama Peserta</div>
+      <small id="examName"></small>
+    </div>
+  </div>
+
+</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+          <button id="examBreak" class="btn" type="button" title="Istirahat sementara">⏸️ ISTIRAHAT</button>
+          <button id="soundToggle" class="btn" type="button" title="Aktifkan/nonaktifkan suara" style="padding:8px 10px;min-width:44px">🔊</button>
+          <div id="timer" class="timer">100:00</div>
+        </div>
+      </div>
+    </div>
+    <div class="exam-wrap">
+      <div class="card question">
+        <div class="qmeta"><span id="qNo"></span><span id="qCat"></span></div>
+        <div id="qText" class="qtext"></div>
+        <div id="options"></div>
+        <div class="actions">
+          <button id="prev" class="btn">← SEBELUMNYA</button>
+          <button id="flag" class="btn gold">⚑ TANDAI</button>
+          <button id="next" class="btn">SELANJUTNYA →</button>
+        </div>
+      </div>
+      <aside class="card sidebar">
+        <b>NOMOR SOAL</b>
+        <div id="numbers" class="grid"></div>
+        <div class="legend">Hijau gelap = sudah dijawab<br>Orange gelap = ditandai / dilewati<br>Biru = soal aktif dan belum dijawab</div>
+        <button id="finish" class="btn red" style="width:100%;margin-top:16px">SELESAI / KUMPULKAN</button>
+      </aside>
+    </div>
+  </section>
+
+  <section id="result" class="main hidden">
+    <div class="card result">
+      <h2 id="resultTitle">HASIL</h2>
+      <p id="resultSub"></p>
+      <div id="scores" class="scoregrid"></div>
+      <div id="summary" class="summary"></div>
+      <div class="review">
+        <h3>REVIEW & PEMBAHASAN</h3>
+        <div id="review"></div>
+      </div>
+      <button id="back" class="btn" style="margin-top:18px">← KEMBALI KE MENU UTAMA</button>
+    </div>
+  </section>
+
+  <div class="source-note">
+  <b>Keterangan Tentang Soal:</b> Soal dalam aplikasi ini adalah soal latihan/prediksi orisinal berbasis materi dan pola SKD.
+  Soal tidak dinyatakan sebagai soal resmi BKN atau soal yang pernah keluar, kecuali jika sumbernya memang dapat diverifikasi.
+</div>
+<div id="powerFooter" class="footer" title="Buka informasi aplikasi dan database">Power By Wak Dit B@-it | @2026</div>
+
+
+<div id="loginModal" class="login-modal hidden" aria-hidden="true">
+  <div class="login-box" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="login-top">
+      <button id="loginClose" class="login-close" type="button" aria-label="Tutup">×</button>
+      <div class="login-emblem">🔐</div>
+      <h2 id="loginTitle" class="login-title">AKSES DATABASE B@-it</h2>
+      <div class="login-sub">LOGIN ADMINISTRATOR • LOCAL DATABASE</div>
+    </div>
+    <div class="login-body">
+      <p class="login-note">Masukkan user dan password untuk membuka pemilihan database lokal.</p>
+      <form id="loginForm" autocomplete="off" novalidate>
+        <div class="login-field">
+          <label for="loginUser">👤 USER</label>
+          <input id="loginUser" class="login-input" type="text" placeholder="Masukkan user" autocomplete="username" required>
+        </div>
+        <div class="login-field">
+          <label for="loginPass">🔑 PASSWORD</label>
+          <input id="loginPass" class="login-input" type="password" placeholder="Masukkan password" autocomplete="current-password" required>
+        </div>
+        <div id="loginError" class="login-error" aria-live="polite"></div>
+        <div class="login-actions">
+          <button id="loginCancel" class="login-btn cancel" type="button">BATAL</button>
+          <button class="login-btn submit" type="submit">🔓 LOGIN</button>
+        </div>
+      </form>
+      <div class="login-foot">Akses ini hanya untuk membuka pemilihan file database lokal B@-it.</div>
+    </div>
+  </div>
+</div>
+
+<div id="appModal" class="app-modal hidden" aria-hidden="true">
+  <div class="app-dialog" role="dialog" aria-modal="true" aria-labelledby="appDialogTitle">
+    <div class="app-dialog-top">
+      <div id="appDialogIcon" class="app-dialog-icon">ℹ️</div>
+      <h2 id="appDialogTitle" class="app-dialog-title">INFORMASI APLIKASI</h2>
+    </div>
+    <div class="app-dialog-body">
+      <div id="appDialogMessage" class="app-dialog-message"></div>
+      <div class="app-dialog-actions">
+        <button id="appDialogCancel" class="app-dialog-btn cancel hidden" type="button">BATAL</button>
+        <button id="appDialogOk" class="app-dialog-btn ok" type="button">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="infoModal" class="info-modal hidden" aria-hidden="true">
+  <div class="info-box" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+    <div class="info-top">
+      <button id="infoClose" class="info-close" type="button" aria-label="Tutup">×</button>
+      <div class="info-emblem">🏛️</div>
+      <h2 id="infoTitle" class="info-title">INFORMASI APLIKASI</h2>
+      <div class="info-sub">SIMULASI SKD-IPDN-CPNS 2026 • CAT</div>
+    </div>
+    <div class="info-body">
+      <div class="info-maker">
+        <div class="info-card gold"><div class="info-label">Dikembangkan oleh</div><div class="info-value gold">Wak Dit B@-it</div></div>
+        <div class="info-card"><div class="info-label">Status aplikasi</div><div class="info-value red">SIMULATOR LATIHAN MANDIRI</div></div>
+      </div>
+      <div class="db-head">
+        <div class="db-heading">📊 INFORMASI DATABASE SOAL</div>
+        <div id="dbStatus" class="db-status loading">⏳ MEMBACA DATABASE...</div>
+      </div>
+      <div class="info-card" style="margin-bottom:12px"><div class="info-label">File database yang sedang digunakan</div><div id="dbFile" class="info-value silver">-</div></div>
+      <div class="db-total"><span>TOTAL SOAL TERBACA</span><strong id="dbTotal">-</strong></div>
+      <div class="db-grid">
+        <div class="db-stat"><b id="dbTWK">-</b><small>TWK</small></div>
+        <div class="db-stat"><b id="dbTIU">-</b><small>TIU</small></div>
+        <div class="db-stat"><b id="dbTKP">-</b><small>TKP</small></div>
+        <div class="db-stat easy"><b id="dbEasy">-</b><small>MUDAH</small></div>
+        <div class="db-stat medium"><b id="dbMedium">-</b><small>SEDANG</small></div>
+        <div class="db-stat hard"><b id="dbHard">-</b><small>SULIT</small></div>
+        <div class="db-stat superhard"><b id="dbSuperHard">-</b><small>SUPER SULIT</small></div>
+      </div>
+      <div class="db-table-wrap">
+        <table class="db-table">
+          <thead><tr><th>KATEGORI</th><th>MUDAH</th><th>SEDANG</th><th>SULIT</th><th>SUPER SULIT</th><th>TOTAL</th></tr></thead>
+          <tbody id="dbDetail"><tr><td colspan="5">Menunggu database...</td></tr></tbody>
+        </table>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:16px;">
+        <button id="chooseLocalExcel" type="button" class="info-local-btn local-db-only">💻 PILIH DATABASE LOKAL B@-IT</button>
+      </div>
+      <div style="text-align:center;margin-top:7px;font-size:11px;color:#69717a;line-height:1.5">
+        Pengujian komputer: pilih file B@-it secara manual. Saat online, database dibaca otomatis dari server.
+      </div>
+      <div class="info-foot">
+        <span class="shine-dot"></span> Database dibaca langsung dari file B@-it yang ditempatkan bersama aplikasi.<br>
+        <b>Catatan:</b> angka di panel ini dihitung otomatis dari data yang berhasil dibaca oleh DATABASE B@-IT.
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+
+<script>
+(function(){
+  const backToPortal = document.getElementById("backToPortal");
+  if(backToPortal){
+    backToPortal.addEventListener("click", function(){
+      window.location.href = "../../index.html";
+    });
+  }
+})();
+</script>
+<script src="app.js"></script>
+</body>
+</html>
