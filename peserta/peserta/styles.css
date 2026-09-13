@@ -1344,12 +1344,10 @@ html, body{min-height:100%;}
 @media(max-width:700px){.home-title-row{align-items:stretch;flex-direction:column}.active-period-card{min-width:0;width:100%}}
 
 /* =========================================================
-   FIX BACKGROUND SKD
-   BACKGROUND TIDAK TERPOTONG
-   SELURUH GAMBAR TETAP TERLIHAT
+   FIX BACKGROUND SKD - FULL SCREEN
+   Background memenuhi seluruh layar tanpa area hitam
    ========================================================= */
 
-/* BACKGROUND UTAMA APLIKASI */
 body{
   background-color:#000 !important;
   background-image:url("background.jpg") !important;
@@ -1359,47 +1357,47 @@ body{
   background-attachment:fixed !important;
 }
 
-/* HALAMAN LOGIN */
+/* HALAMAN LOGIN PESERTA */
 .auth-screen{
   background-color:#000 !important;
   background-image:
     linear-gradient(rgba(25,8,8,.18),rgba(25,8,8,.18)),
     url("background.jpg") !important;
   background-position:center center !important;
-  background-size:contain !important;
+  background-size:cover !important;
   background-repeat:no-repeat !important;
   background-attachment:fixed !important;
 }
 
-/* HALAMAN WELCOME */
+/* HALAMAN WELCOME PESERTA */
 .welcome-screen{
   background-color:#000 !important;
   background-image:
     linear-gradient(rgba(25,8,8,.18),rgba(25,8,8,.18)),
     url("background.jpg") !important;
   background-position:center center !important;
-  background-size:contain !important;
+  background-size:cover !important;
   background-repeat:no-repeat !important;
   background-attachment:fixed !important;
 }
 
-/* MOBILE */
+/* HP */
 @media(max-width:600px){
 
   body{
-    background-size:contain !important;
+    background-size:cover !important;
     background-position:center center !important;
     background-attachment:scroll !important;
   }
 
   .auth-screen{
-    background-size:contain !important;
+    background-size:cover !important;
     background-position:center center !important;
     background-attachment:scroll !important;
   }
 
   .welcome-screen{
-    background-size:contain !important;
+    background-size:cover !important;
     background-position:center center !important;
     background-attachment:scroll !important;
   }
