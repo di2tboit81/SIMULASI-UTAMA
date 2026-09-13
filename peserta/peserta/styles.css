@@ -2254,3 +2254,90 @@ input{
     max-width:150px !important;
   }
 }
+
+/* =========================================================
+   TOMBOL KEMBALI KE PORTAL UTAMA — PREMIUM / GLOW / CENTER
+   Hanya untuk tombol kembali pada halaman LOGIN PESERTA.
+   Tidak mengubah tombol LOGIN, LUPA PASSWORD, atau DAFTAR.
+   ========================================================= */
+#authScreen .auth-box > button:not(.auth-submit):not(.auth-forgot):not(.google-login-btn){
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:min(330px,100%) !important;
+  min-height:50px !important;
+  margin:18px auto 0 !important;
+  padding:12px 22px !important;
+  box-sizing:border-box !important;
+  border:2px solid #d4af37 !important;
+  border-radius:999px !important;
+  background:
+    linear-gradient(135deg,#76070b 0%,#a9161d 38%,#c79b25 72%,#8b0000 100%) !important;
+  color:#fff !important;
+  font-size:15px !important;
+  font-weight:1000 !important;
+  letter-spacing:.35px !important;
+  line-height:1.2 !important;
+  text-align:center !important;
+  white-space:normal !important;
+  cursor:pointer !important;
+  text-shadow:
+    0 2px 2px rgba(0,0,0,.75),
+    0 0 6px rgba(255,255,255,.35) !important;
+  box-shadow:
+    0 4px 0 #6e4b00,
+    0 8px 18px rgba(0,0,0,.28),
+    0 0 10px rgba(255,216,70,.65),
+    0 0 24px rgba(212,175,55,.38),
+    inset 0 2px 0 rgba(255,255,255,.72),
+    inset 0 -5px 8px rgba(70,0,0,.28) !important;
+  transition:transform .18s ease,filter .18s ease,box-shadow .18s ease !important;
+  position:relative !important;
+  overflow:hidden !important;
+}
+
+#authScreen .auth-box > button:not(.auth-submit):not(.auth-forgot):not(.google-login-btn)::before{
+  content:"🇮🇩" !important;
+  margin-right:10px !important;
+  font-size:20px !important;
+  line-height:1 !important;
+  filter:drop-shadow(0 0 3px rgba(255,255,255,.65)) !important;
+}
+
+#authScreen .auth-box > button:not(.auth-submit):not(.auth-forgot):not(.google-login-btn)::after{
+  content:"→" !important;
+  margin-left:10px !important;
+  font-size:21px !important;
+  line-height:1 !important;
+  text-shadow:0 2px 3px #000 !important;
+}
+
+#authScreen .auth-box > button:not(.auth-submit):not(.auth-forgot):not(.google-login-btn):hover{
+  transform:translateY(-2px) !important;
+  filter:brightness(1.12) !important;
+  box-shadow:
+    0 5px 0 #6e4b00,
+    0 11px 22px rgba(0,0,0,.32),
+    0 0 14px rgba(255,216,70,.85),
+    0 0 30px rgba(212,175,55,.48),
+    inset 0 2px 0 rgba(255,255,255,.82),
+    inset 0 -5px 8px rgba(70,0,0,.22) !important;
+}
+
+#authScreen .auth-box > button:not(.auth-submit):not(.auth-forgot):not(.google-login-btn):active{
+  transform:translateY(2px) !important;
+  box-shadow:
+    0 2px 0 #6e4b00,
+    0 5px 12px rgba(0,0,0,.25),
+    0 0 12px rgba(255,216,70,.62),
+    inset 0 3px 5px rgba(0,0,0,.24) !important;
+}
+
+@media(max-width:600px){
+  #authScreen .auth-box > button:not(.auth-submit):not(.auth-forgot):not(.google-login-btn){
+    width:min(320px,100%) !important;
+    min-height:48px !important;
+    padding:11px 16px !important;
+    font-size:14px !important;
+  }
+}
